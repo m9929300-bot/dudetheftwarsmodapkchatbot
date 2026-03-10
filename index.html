@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>DTW Assistant</title>
+<style>
+body{margin:0;font-family:Arial, sans-serif;background:#e9edf5;height:100vh;display:flex}
+#chatContainer{width:100%;height:100vh;background:white;display:flex;flex-direction:column;overflow:hidden}
+#chatHeader{background:linear-gradient(90deg,#3b6eea,#4a7cf5);color:white;padding:16px;display:flex;align-items:center}
+#avatar{width:38px;height:38px;border-radius:50%;background:#6fa0ff;display:flex;align-items:center;justify-content:center;font-weight:bold;margin-right:10px;font-size:16px}
+#headerText{font-size:15px}
+#status{font-size:12px;opacity:.9}
+#chat{flex:1;padding:20px;overflow-y:auto;background:#f4f6fb}
+.message{padding:12px 14px;border-radius:14px;margin-bottom:12px;font-size:14px;max-width:70%;line-height:1.5}
+.bot{background:#e6e9f2}
+.user{background:#d6e4ff;margin-left:auto}
+#suggestions{padding:10px 20px;border-top:1px solid #eee;background:#fafbff}
+.suggestBtn{background:#eef2ff;border:none;padding:8px 12px;margin:4px;border-radius:16px;cursor:pointer;font-size:13px}
+#inputArea{display:flex;padding:14px;border-top:1px solid #ddd;background:white}
+#input{flex:1;border:none;background:#eef1f6;padding:12px;border-radius:25px;outline:none;font-size:14px}
+#sendBtn{margin-left:10px;background:#3b6eea;color:white;border:none;width:42px;height:42px;border-radius:12px;font-size:18px;cursor:pointer}
+.typing{font-style:italic;opacity:.7}
+</style>
+</head>
+<body>
+
+<div id="chatContainer">
+
+<div id="chatHeader">
+<div id="avatar">D</div>
+<div id="headerText">
+<strong>DTW Assistant</strong><br>
+<span id="status">● Online Knowledge Base</span>
+</div>
+</div>
+
+<div id="chat"></div>
+
+<div id="suggestions">
+<button class="suggestBtn" onclick="ask('Cars in Dude Theft Wars')">Cars</button>
+<button class="suggestBtn" onclick="ask('Weapons in Dude Theft Wars')">Weapons</button>
+<button class="suggestBtn" onclick="ask('Secrets in Dude Theft Wars')">Secrets</button>
+<button class="suggestBtn" onclick="ask('Gameplay tips')">Gameplay Tips</button>
+<button class="suggestBtn" onclick="ask('Download Dude Theft Wars mod apk')">Download Mod APK</button>
+</div>
+
+<div id="inputArea">
+<input id="input" placeholder="Ask anything about Dude Theft Wars...">
+<button id="sendBtn" onclick="reply()">▲</button>
+</div>
+
+</div>
+
+<script>
+
+const knowledgeBase=[
+
+{keys:["download","mod apk","install","apk download","download dude theft wars"],answer:`You can download the latest <b>Dude Theft Wars Mod APK</b> from <b>duetheftwarsapk.com</b>.<br><br>Steps:<br>1. Visit duetheftwarsapk.com<br>2. Download the APK file<br>3. Enable <b>Unknown Sources</b> in Android settings<br>4. Install the game.`},
+
+{keys:["map","city","locations","areas","map explain","city map"],answer:`The <b>Dude Theft Wars map</b> is a sandbox open city with houses, roads, shops, parks, and secret locations. Players can explore freely, climb rooftops, enter buildings, and discover hidden easter eggs across the city.`},
+
+{keys:["weapons","guns","gun","rocket launcher","grenade","weapon list"],answer:`Weapons in Dude Theft Wars include pistols, shotguns, rifles, grenades, and rocket launchers. Some weapons create funny ragdoll physics effects when used on NPCs.`},
+
+{keys:["vehicles","cars","car","bike","helicopter","drive"],answer:`Vehicles in Dude Theft Wars include sports cars, taxis, police cars, trucks, bikes, and helicopters. Players can steal vehicles from NPCs and drive around the city.`},
+
+{keys:["police","cop","wanted level","escape police"],answer:`Police chase you when you attack NPCs, steal cars, or create chaos. The more trouble you cause, the higher your wanted level becomes and more police will spawn.`},
+
+{keys:["characters","character","main character","dude"],answer:`The main character of the game is called <b>Dude</b>. Players control Dude to explore the city, interact with NPCs, drive vehicles, and create chaos in the sandbox world.`},
+
+{keys:["npc","people","citizens"],answer:`NPCs in Dude Theft Wars are random citizens living in the city. They walk around, drive vehicles, react to chaos, and interact with the player in funny ways.`},
+
+{keys:["secrets","secret","hidden","easter egg"],answer:`The game contains many hidden secrets like strange rooms, developer easter eggs, funny physics tricks, and hidden weapons across the map.`},
+
+{keys:["gameplay","tips","how to play","guide"],answer:`Gameplay tips: explore the map, experiment with weapons, steal vehicles, interact with NPCs, and discover funny physics interactions around the city.`},
+
+{keys:["missions","story","tasks"],answer:`Dude Theft Wars focuses mainly on sandbox gameplay rather than structured missions. Players create their own fun by exploring, fighting police, driving vehicles, and discovering secrets.`},
+
+{keys:["graphics","physics","ragdoll"],answer:`The game uses ragdoll physics which makes characters react in funny and unpredictable ways when hit by weapons, vehicles, or explosions.`},
+
+{keys:["money","coins","earn money"],answer:`Players can collect money in the city and use it to buy weapons, items, and other fun tools inside the game.`},
+
+{keys:["update","latest version","new version"],answer:`The latest version of Dude Theft Wars usually adds new weapons, vehicles, bug fixes, and funny gameplay improvements.`}
+
+];
+
+function ask(text){
+document.getElementById("input").value=text;
+reply();
+}
+
+function generateSmartAnswer(question){
+let q = question.toLowerCase();
+
+if(q.includes("map")){
+return `The <b>Dude Theft Wars map</b> is a sandbox open city with houses, roads, police stations, shops, and hidden locations. Players can explore freely, steal vehicles, interact with NPCs, and discover funny secrets across the map.`;
+}
+
+if(q.includes("mission")){
+return `Dude Theft Wars focuses more on sandbox gameplay than story missions. Players create their own fun by exploring the map, using weapons, driving vehicles, and interacting with NPCs.`;
+}
+
+if(q.includes("creator") || q.includes("developer")){
+return `Dude Theft Wars was developed by an indie game studio that created the game as a funny sandbox experience inspired by open-world chaos games.`;
+}
+
+if(q.includes("how") || q.includes("explain") || q.includes("what")){
+return `Here is information related to your question about <b>Dude Theft Wars</b>:<br><br>The game is an open-world sandbox where players explore a city, drive vehicles, interact with NPCs, fight police, and discover hidden secrets using physics-based gameplay.`;
+}
+
+return `I can answer questions about <b>Dude Theft Wars</b> including gameplay, vehicles, weapons, secrets, characters, and the <b>Dude Theft Wars Mod APK</b>. Try asking your question with more details.`;
+}
+
+async function reply(){
+let inputBox=document.getElementById("input");
+let text=inputBox.value.trim();
+let lower=text.toLowerCase();
+let chat=document.getElementById("chat");
+
+if(text==="") return;
+
+chat.innerHTML+=`<div class="message user">${text}</div>`;
+
+let typing=document.createElement("div");
+typing.className="message bot typing";
+typing.innerHTML="DTW Assistant is typing...";
+chat.appendChild(typing);
+chat.scrollTop=chat.scrollHeight;
+
+let response=null;
+let bestScore=0;
+
+for(let item of knowledgeBase){
+let score=0;
+for(let key of item.keys){
+if(lower.includes(key)) score++;
+}
+if(score>bestScore){
+bestScore=score;
+response=item.answer;
+}
+}
+
+if(!response){
+response = generateSmartAnswer(text);
+}
+
+await new Promise(r=>setTimeout(r,500));
+
+typing.remove();
+chat.innerHTML+=`<div class="message bot">${response}</div>`;
+chat.scrollTop=chat.scrollHeight;
+
+inputBox.value="";
+}
+
+document.getElementById("input").addEventListener("keypress",function(e){if(e.key==="Enter") reply();});
+
+window.onload=function(){
+let chat=document.getElementById("chat");
+chat.innerHTML+=`<div class="message bot">Hey! I can help with anything about <b>Dude Theft Wars</b>.<br><br>I can explain gameplay, vehicles, weapons, secrets, characters, map locations, and also guide you to download the <b>Dude Theft Wars Mod APK</b>.<br><br>Ask me anything about the game.</div>`;
+}
+
+</script>
+
+</body>
+</html>
